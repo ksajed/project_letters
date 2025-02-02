@@ -51,15 +51,18 @@
               <td>{{ contact.email }}</td>
               <td>
                 <a href="{% url 'update_contact' contact.id %}" class="btn btn-sm btn-warning" title="Modifier">
-                  <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-pencil-square"></i>
                 </a>
                 <a href="{% url 'delete_contact' contact.id %}" class="btn btn-sm btn-danger" title="Supprimer">
-                  <i class="bi bi-trash"></i>
+                    <i class="bi bi-trash"></i>
                 </a>
                 <a href="{% url 'choose_template' contact.id %}" class="btn btn-sm btn-success" title="Générer Lettre">
-                  <i class="bi bi-file-earmark-check"></i>
+                    <i class="bi bi-file-earmark-check"></i>
                 </a>
-              </td>
+                <a href="{% url 'send_letter' contact.id %}" class="btn btn-sm btn-info" title="Envoyer par Email">
+                    <i class="bi bi-envelope"></i>
+                </a>
+            </td>
             </tr>
             {% empty %}
             <tr>

@@ -1,26 +1,16 @@
-from docx import Document
+from django.core.mail import send_mail
+from django.conf import settings
 
-# Création d'un nouveau document Word
-doc = Document()
+def envoyer_email():
+    sender_email = settings.EMAIL_HOST_USER  # Récupérer l'email configuré
+    subject = "Bienvenue !"
+    message = "Merci de vous être inscrit sur notre site."
+    recipient_list = ["utilisateur@example.com"]
 
-# Ajouter un titre ou un objet (facultatif)
-doc.add_heading("Objet : Demande d'information", level=1)
-
-# Ajouter le contenu du template avec des balises dynamiques
-doc.add_paragraph("Bonjour {nom},")
-doc.add_paragraph("")
-doc.add_paragraph("Nous vous remercions de l'intérêt que vous portez à nos services.")
-doc.add_paragraph("")
-doc.add_paragraph("Nous souhaitons vous informer que votre adresse enregistrée est :")
-doc.add_paragraph("{adresse}")
-doc.add_paragraph("")
-doc.add_paragraph("Pour toute question, n'hésitez pas à nous contacter à l'adresse suivante :")
-doc.add_paragraph("{email}")
-doc.add_paragraph("")
-doc.add_paragraph("Cordialement,")
-doc.add_paragraph("L'équipe de Mon Application")
-
-# Sauvegarder le document dans un fichier
-output_filename = "modele_lettre.docx"
-doc.save(output_filename)
-print(f"Le template a été généré et sauvegardé sous le nom '{output_filename}'.")
+    send_mail(
+        subject,
+        message,
+        sender_email,  # Expéditeur
+        recipient_list,
+        fail_silently=False,
+    )

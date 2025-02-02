@@ -1,7 +1,9 @@
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -100,6 +102,20 @@ USE_I18N = True
 
 USE_TZ = True
 
+#Traduction
+
+
+LANGUAGES = [
+    ('en', _('English')),  # Anglais
+    ('fr', _('Français')),  # Français
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',  # Dossier pour stocker les traductions
+]
+
+USE_I18N = True  # Active la traduction
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
@@ -110,3 +126,19 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGIN_URL = '/accounts/login/'  # Page de connexion
+LOGIN_REDIRECT_URL = 'home'  # Redirige après connexion
+LOGOUT_REDIRECT_URL = 'home'  # Redirige après déconnexion
+
+
+
+#Configuration de l'envoi d'email dans 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Ou un autre fournisseur SMTP
+EMAIL_PORT = 587  # Port pour TLS
+EMAIL_USE_TLS = True  # Active la sécurité TLS
+EMAIL_HOST_USER = 'khalidsajed1975@gmail.com'  # L'email expéditeur
+EMAIL_HOST_PASSWORD = 'Intissar40'  # ⚠️ À protéger avec des variables d'environnement !
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

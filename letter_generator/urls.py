@@ -6,5 +6,7 @@ urlpatterns = [
     
     path('', include('letters_app.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),  # Ajout des URL d'authentification
+    
     
 ]

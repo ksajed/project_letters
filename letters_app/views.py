@@ -6,9 +6,13 @@ from django.shortcuts import render
 from django.contrib import messages  # Optionnel : pour afficher des messages à l'utilisateur
 from .forms import ContactImportForm
 from django.core.paginator import Paginator
+from .email_utils import send_letter_email  # Fonction pour envoyer un emai
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, "index.html")
+
+@login_required
 def import_contacts(request):
     if request.method == "POST":
         form = ContactImportForm(request.POST, request.FILES)
@@ -40,6 +44,8 @@ def generate_letter_view(request, contact_id, template_id):
     
     return FileResponse(open(output_path, "rb"), as_attachment=True, filename=f"{contact.nom}.pdf")
 
+
+@login_required
 def list_contacts(request):
     # Récupérer tous les contacts ordonnés par nom
     contacts_list = Contact.objects.all().order_by('nom')
@@ -66,7 +72,31 @@ def list_contacts(request):
     return render(request, "list_contacts.html", context)
 
 
+@login_required
+def send_letter(request, contact_id):
+    """
+    Génère une lettre et l'envoie par email à un contact donné.
+    """
+    contact = get_object_or_404(Contact, id=contact_id)
+    occasion = "Message spécial"  # L'occasion peut être déterminée dynamiquement
+    message = "Voici un message spécial pour vous."
+    
+    # Générer le contenu de la lettre
+    letter_content = f"Cher {contact.nom},\n\n{message}\n\nCordialement,\nVotre équipe."
 
+    # Envoi de l'email
+    send_letter_email(contact.email, f"Votre lettre spéciale - {occasion}", letter_content)
+    
+    messages.success(request, f"Lettre envoyée avec succès à {contact.email}.")
+    return redirect('list_contacts')
+
+
+
+
+
+
+
+@login_required
 def delete_contact(request, contact_id):
     contact = get_object_or_404(Contact, id=contact_id)
     
@@ -79,7 +109,7 @@ def delete_contact(request, contact_id):
     # Afficher la page de confirmation pour la suppression (méthode GET)
     return render(request, "confirm_delete.html", {"contact": contact})
 
-
+@login_required
 def update_contact(request, contact_id):
     """Modifie un contact existant."""
     contact = get_object_or_404(Contact, id=contact_id)
@@ -95,7 +125,7 @@ def update_contact(request, contact_id):
         form = ContactForm(instance=contact)
     return render(request, "update_contact.html", {"form": form, "contact": contact})
 
-
+@login_required
 def add_contact(request):
     """Ajoute un nouveau contact."""
     if request.method == "POST":
@@ -111,7 +141,7 @@ def add_contact(request):
     return render(request, "add_contact.html", {"form": form})
 
 
-
+@login_required
 def add_template(request):
     """
     Vue permettant d'ajouter un nouveau template de lettre.
@@ -131,6 +161,7 @@ def add_template(request):
 
     return render(request, "add_template.html", {"form": form})
 
+@login_required
 def list_templates(request):
     templates = LetterTemplate.objects.all()
     return render(request, "list_templates.html", {"templates": templates})

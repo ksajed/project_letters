@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import add_contact, add_template, choose_template_for_letter, delete_contact, import_contacts, generate_letter_view,home, list_contacts, list_templates, update_contact
+from .views import add_contact, add_template, choose_template_for_letter, delete_contact, import_contacts, generate_letter_view,home, list_contacts, list_templates, send_letter, update_contact
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('', home, name='home'),
@@ -12,4 +14,10 @@ urlpatterns = [
     path('add-template/', add_template, name='add_template'),
     path('list-templates/', list_templates, name='list_templates'),
     path('choose-template/<int:contact_id>/', choose_template_for_letter, name='choose_template'),
+    path('send_letter/<int:contact_id>/', send_letter, name='send_letter'),
+
+
+
+    
+    
 ]
