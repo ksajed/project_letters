@@ -1,25 +1,45 @@
 {% extends "base.html" %}
 
-{% block title %}Choix du Template{% endblock %}
+{% block title %}Choisir un Template{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2>Choisir un template pour générer la lettre pour {{ contact.nom }}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {% if templates %}
-            {% for template in templates %}
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="template_id" id="template{{ template.id }}" value="{{ template.id }}">
-                    <label class="form-check-label" for="template{{ template.id }}">
-                        {{ template.titre }}
-                    </label>
-                </div>
-            {% endfor %}
-            <button type="submit" class="btn btn-primary mt-3">Générer la lettre</button>
-        {% else %}
-            <p>Aucun template disponible. Veuillez ajouter un template.</p>
-        {% endif %}
-    </form>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i> Choisir un template</h3>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">Destinataire : <strong>{{ contact.nom }}</strong></h4>
+
+            <form method="post" action="{% url 'generate_letter' contact.id %}">
+                {% csrf_token %}
+
+                {% if templates %}
+                    <div class="mb-3">
+                        {% for template in templates %}
+                            <div class="form-check form-check-lg p-3 border rounded bg-light shadow-sm">
+                                <input class="form-check-input" type="radio" 
+                                       name="template_id" 
+                                       id="template{{ template.id }}" 
+                                       value="{{ template.id }}" required>
+                                <label class="form-check-label fs-5 fw-bold" for="template{{ template.id }}">
+                                    <span class="badge bg-primary me-2">{{ template.id }}</span> 
+                                    {{ template.titre }} - 
+                                    <span class="text-muted">{{ template.description|default:"Aucune description disponible" }}</span>
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3 w-100">
+                        <i class="bi bi-file-earmark-plus me-1"></i> Générer la lettre
+                    </button>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Aucun template disponible. Veuillez ajouter un template.
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

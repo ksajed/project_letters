@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Lettre Générée{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i> Lettre Générée</h3>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-3">Destinataire : <strong>{{ contact.nom }}</strong></h4>
+
+            <!-- Section pour afficher la lettre générée -->
+            <div class="p-4 border rounded bg-light">
+                <h5 class="text-center mb-3">Lettre</h5>
+                <pre class="p-3 bg-white border">{{ generated_letter }}</pre> 
+                
+                <!-- Affichage de la lettre générée -->
+            </div>
+
+            <!-- Bouton pour envoyer la lettre par email -->
+            <form method="post" action="{% url 'send_letter' contact.id %}">
+                {% csrf_token %}
+                <input type="hidden" name="letter_content" value="{{ generated_letter }}">
+                <input type="hidden" name="recipient_email" value="{{ contact.email }}">
+                <button type="submit" class="btn btn-primary mt-3">
+                    <i class="bi bi-envelope"></i> Envoyer par Email
+                </button>
+            </form>
+
+            <a href="{% url 'choose_template' contact.id %}" class="btn btn-secondary mt-3">
+                <i class="bi bi-arrow-left"></i> Retourner au choix des templates
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

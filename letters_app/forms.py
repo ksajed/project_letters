@@ -39,9 +39,24 @@ class ContactImportForm(forms.Form):
             else:
                 print(f"Le contact avec l'email '{email}' existe déjà et ne sera pas ajouté.")
 
-class LetterTemplateForm(forms.ModelForm):
+
+#gérer l'affichage du formulaire et l'upload des fichiers.              
+class LetterTemplateForm(forms.ModelForm):  # Permet d'associer automatiquement les champs du modèle
     class Meta:
-        model = LetterTemplate
-        fields = ['titre', 'fichier']
+        model = LetterTemplate  # Associe ce formulaire au modèle LetterTemplate
+        fields = ['titre', 'description', 'fichier']  # Ajoute description aux champs affichés
+
+    # Méthode de validation pour s'assurer que seul un fichier .docx est accepté
+    def clean_fichier(self):
+        file = self.cleaned_data.get("fichier")  # Récupère le fichier soumis dans le formulaire
+        if file:  # Vérifie si un fichier a bien été soumis
+            if not file.name.endswith(".docx"):  # Vérifie l'extension du fichier
+                raise forms.ValidationError("Seuls les fichiers .docx sont autorisés.")  # Lève une erreur si ce n'est pas un .docx
+        return file  # Retourne le fichier validé
 
 
+
+
+
+
+    
